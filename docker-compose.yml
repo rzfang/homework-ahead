@@ -11,7 +11,7 @@ services:
       - db
       - redis
     volumes:
-      - ./app:/app/app   # 把本機的程式碼掛進容器
+      - ./app:/app/app # 把本機的程式碼掛進容器
       - ./uploaded_files:/app/uploaded_files
 
   worker:
@@ -22,7 +22,7 @@ services:
       - redis
       - db
     volumes:
-      - ./app:/app/app   # worker 也同步程式碼
+      - ./app:/app/app # worker 也同步程式碼
 
   db:
     image: postgres:15

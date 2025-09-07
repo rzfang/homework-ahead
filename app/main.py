@@ -29,21 +29,49 @@ def on_startup():
 def read_root ():
   return { "msg": "Hello World" }
 
+# for dev
+@app.get("/sqlSchema")
+def read_root (db: Session = Depends(get_db)):
+  result = db.execute(
+    text("SELECT tablename FROM pg_tables WHERE schemaname = 'public';")
+  )
+
+  schema = {}
+
+  rows = result.fetchall()
+
+  for row in rows:
+    tableName = row[0]
+
+    result = db.execute(
+      text("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = :tableName;"),
+      { 'tableName': tableName }
+    )
+
+    rows = result.fetchall()
+
+    schema[tableName] = [row[0] for row in rows]
+
+  return { 'schema': schema }
+
+# for dev
 @app.get("/sql")
 def test_db (sql: str, db: Session = Depends(get_db)):
   result = db.execute(
-    # text("SELECT tablename FROM pg_tables WHERE schemaname = 'public';")
     text(sql)
   )
 
+  if sql[0:5].lower() =='drop ':
+    print(result)
+
+    return {
+      'error': 1,
+      'message': 'dropped.',
+    }
+
   rows = result.fetchall() # list of Row
-  # tables = [row[0] for row in rows] # 取第一欄 (tablename)
 
-  # return { "tables": tables }
-
-  print(rows)
-
-  return { "msg": "good job" };
+  return { "msg": rows };
 
 # @app.post("/add")
 # def add(a: int, b: int, db=Depends(get_db)):
