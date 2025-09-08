@@ -36,7 +36,7 @@ def read_root ():
   return { 'error': 0, 'message': 'Hello World' }
 
 # for dev
-@app.get('/dev/sqlSchema')
+@app.get('/dev/schema')
 def read_root (db: Session = Depends(get_db)):
   result = db.execute(
     text("SELECT tablename FROM pg_tables WHERE schemaname = 'public';")
