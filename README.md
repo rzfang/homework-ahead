@@ -27,5 +27,5 @@ $ docker compose up --build
 
 ## API playground
 
-after starting the server, access follow url to access API dashboard.
+after starting the server, access following url to access API dashboard.  
 http://127.0.0.1:8000/docs#/default
